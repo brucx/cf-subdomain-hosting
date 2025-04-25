@@ -13,6 +13,29 @@
 
 export default {
 	async fetch(request, env, ctx): Promise<Response> {
-		return new Response('Hello World!');
+		const url = new URL(request.url);
+		const subdomain = url.hostname.split('.')[0];
+		const bucket = env.MY_BUCKET;
+		let filename = '';
+		if(url.pathname === '/') {
+			filename = `${subdomain}/index.html`;
+		} else {
+			filename = `${subdomain}/${url.pathname}`;
+		}
+		
+		const object = await bucket.get(filename);
+		if(object) {
+			return new Response(object.body, {
+				headers: {
+					'Content-Type': object.httpMetadata?.contentType || 'text/html'
+				}
+			});
+		}
+		
+		return new Response(`Hello ${subdomain}!`, {
+			headers: {
+				'Content-Type': 'text/html'
+			}
+		});
 	},
 } satisfies ExportedHandler<Env>;
