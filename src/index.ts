@@ -17,22 +17,23 @@ export default {
 		const subdomain = url.hostname.split('.')[0];
 		const bucket = env.MY_BUCKET;
 		let filename = '';
-		if(url.pathname === '/') {
+		if (url.pathname === '/') {
 			filename = `${subdomain}/index.html`;
 		} else {
 			filename = `${subdomain}${url.pathname}`;
 		}
-		
+
 		const object = await bucket.get(filename);
-		if(object) {
+		if (object) {
 			return new Response(object.body, {
 				headers: {
 					'Content-Type': object.httpMetadata?.contentType || 'text/html'
 				}
 			});
 		}
-		
-		return new Response(`Hello ${subdomain}!`, {
+
+		return new Response(`${subdomain} pages not found!`, {
+			status: 404,
 			headers: {
 				'Content-Type': 'text/html'
 			}
