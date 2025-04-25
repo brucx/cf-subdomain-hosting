@@ -14,7 +14,8 @@
 export default {
 	async fetch(request, env, ctx): Promise<Response> {
 		const url = new URL(request.url);
-		const subdomain = url.hostname.split('.')[0];
+		const domain = url.hostname.split('.');
+		const subdomain = domain.length > 2 ? domain[0] : 'www';
 		const bucket = env.MY_BUCKET;
 		let filename = '';
 		if (url.pathname === '/') {
