@@ -20,7 +20,7 @@ export default {
 		if(url.pathname === '/') {
 			filename = `${subdomain}/index.html`;
 		} else {
-			filename = `${subdomain}/${url.pathname}`;
+			filename = `${subdomain}${url.pathname}`;
 		}
 		
 		const object = await bucket.get(filename);
